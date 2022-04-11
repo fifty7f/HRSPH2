@@ -216,28 +216,30 @@
       //Write to RTDB
       document.getElementById("sub").addEventListener('click', function writeUserData( pid, name, pcp, date, medication, forr, notes) {
         pid = document.getElementById("pid").value
-        name = document.getElementById("name").value
-        medication = document.getElementById("medication").value 
-        pcp = document.getElementById("pcp").value 
+        name = document.getElementById("name").value   
+        pcp = document.getElementById("pcp").value
+        date = document.getElementById("date").value
+        medication = document.getElementById("medication").value
         forr = document.getElementById("forr").value
         notes = document.getElementById("notes").value
-        date = document.getElementById("date").value
+        
 
         set(ref(db, 'MedicationLog/' + pid), {
           pid: pid,
           name: name,
           pcp: pcp,
+          date: date,
           medication: medication,
           forr: forr,
-          notes: notes,
-          date: date
+          notes: notes
+  
       }).then({
 
       }); }
       )
       
       //Filling the data
-      function AddDataToTable(pid, name, pcp, medication, forr, notes, date){
+      function AddDataToTable(pid, name, pcp, date, medication, forr, notes){
           let trow = document.createElement('tr');
           let td1 = document.createElement('td');
           let td2 = document.createElement('td');
