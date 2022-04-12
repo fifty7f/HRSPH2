@@ -156,23 +156,26 @@
         </div>
         <!--ModalEnds-->
 
-  <!-- Edit Modal -->
-  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content shadow">
-        <div class="modal-header bg-light border-0">
-          <h5 class="modal-title " id="exampleModalLongTitle"></h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <!-- Edit Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content shadow">
+              <div class="modal-header bg-light border-0">
+                <h5 class="modal-title " id="exampleModalLongTitle">Edit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body " id="exampleModalLongBody">
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="sub">Save Patient</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="modal-body " id="exampleModalLongBody">
-          
-        </div>
-        
-      </div>
-    </div>
-  </div>
 
         <div class="divider">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
         <!--TableStarts-->
@@ -279,26 +282,26 @@
       	const exampleModalLongTitle = document.getElementById('exampleModalLongTitle');
       	const exampleModalLongBody = document.getElementById('exampleModalLongBody');
 		
-		exampleModalLongTitle.innerHTML = ``
-      	exampleModalLongBody.innerHTML = ``
+        exampleModalLongTitle.innerHTML = ``
+        exampleModalLongBody.innerHTML = ``
 
-      	exampleModalLongTitle.innerHTML = `Edit <small>${pid}</small>`
-      	exampleModalLongBody.innerHTML = `<form id="form_edit_record" method="post" autocomplete="off">
+        exampleModalLongTitle.innerHTML = `Edit <small>${pid}</small>`
+        exampleModalLongBody.innerHTML = `<form id="form_edit_record" method="post" autocomplete="off">
             <div>
               <input type="hidden" id="key_edit_record" name="task_key_update" class="form-control form-control-md" placeholder="KEY" value="${pid}" required="" disabled>
               <div class="form-group">
                 <input type="text" id="name_edit_record" name="name_edit_record" class="form-control form-control-md" placeholder="Title" value="${name}" required="" >
               </div>
-               <div class="form-group">
+              <div class="form-group">
                 <input type="text" id="contact_edit_record" name="contact_edit_record" class="form-control form-control-md" placeholder="Title" value="${contact}" required="" >
               </div>
-               <div class="form-group">
+              <div class="form-group">
                 <input type="text" id="address_edit_record" name="address_edit_record" class="form-control form-control-md" placeholder="Title" value="${name}" required="" >
               </div>
-               <div class="form-group">
+              <div class="form-group">
                 <input type="text" id="pcp_edit_record" name="pcp_edit_record" class="form-control form-control-md" placeholder="Title" value="${pcp}" required="" >
               </div>
-               <div class="form-group">
+              <div class="form-group">
                 <input type="text" id="nextVisit_edit_record" name="nextVisit_edit_record" class="form-control form-control-md" placeholder="Title" value="${nextVisit}" required="" >
               </div>
               <div class="form-group">
