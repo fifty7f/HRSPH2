@@ -88,6 +88,11 @@
           <ul class="list-group">
             <li class="list-group-item d-flex justify-content-between">
               <div>
+                  <input type="number" id="payId" placeholder="" class="form-control">
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>
                   <input type="description" id="dueFor" placeholder="Payment For" class="form-control">
               </div>
             </li>
@@ -109,7 +114,7 @@
                </div>
               <div class="col-6">
                 <label class="form-label" for="lastname">Last name</label>
-                <input type="text" id="lastname" class="form-control">
+                <input type="text" id="" class="form-control">
               </div>
               <div class="col-12">
                 <label class="form-label" for="email">Email
@@ -233,13 +238,15 @@
 
 
       //Write to RTDB
-      document.getElementById("sub").addEventListener('click', function writeUserData( name, due, dueFor, date) {
+      document.getElementById("sub").addEventListener('click', function writeUserData(payId, name, due, dueFor, date) {
+        payId = document.getElementById("payId").value
         name = document.getElementById("name").value
         due = document.getElementById("due").value 
         dueFor = document.getElementById("dueFor").value 
         date= document.getElementById("date").value 
 
-        set(ref(db, 'PaymentTransaction/' + name), {
+        set(ref(db, 'PaymentTransaction/' + payId), {
+          payId: payId,
           name: name,
           due: due,
           date: date,
@@ -250,24 +257,27 @@
       )
       
       //Filling the data
-      function AddDataToTable(name, due, dueFor, date){
+      function AddDataToTable(payId, name, due, dueFor, date){
           let trow = document.createElement('tr');
           let td1 = document.createElement('td');
           let td2 = document.createElement('td');
           let td3 = document.createElement('td');
           let td4 = document.createElement('td');
           let td5 = document.createElement('td');
+          let td6 = document.createElement('td');
 
+          td1.innerHTML = payId;
           td2.innerHTML = name;
-          td4.innerHTML = due;
-          td5.innerHTML = dueFor;
-          td6.innerHTML = date;
+          td3.innerHTML = due;
+          td4.innerHTML = dueFor;
+          td5.innerHTML = date;
 
           trow.appendChild(td1);
           trow.appendChild(td2);
           trow.appendChild(td3);
           trow.appendChild(td4);
           trow.appendChild(td5);
+          trow.appendChild(td6);
 
 
           tbody.appendChild(trow); 
@@ -278,7 +288,7 @@
           var counter = 0;
           PaymentTransaction.forEach(element => {
               console.log('AddAllItemsToTable: ', element);
-              AddDataToTable(element.name, element.due, element.dueFor, element.pcp, element.date);
+              AddDataToTable( element.date, element.dueFor, element.due,);
               counter++;
               if (PaymentTransaction.length === counter) {
                   addDataTable()
