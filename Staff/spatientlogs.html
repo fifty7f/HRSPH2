@@ -190,6 +190,7 @@
           <table id="myTable" class="display" style="width:100%" >
             <thead>
                 <tr>
+                  <th>Log ID</th>
                   <th>Patient ID</th>
                   <th>Name</th>
                   <th>Log Type</th>
@@ -235,7 +236,7 @@
 
 
       //Write to RTDB
-      document.getElementById("sub").addEventListener('click', function writeUserData( pid, name, logType, pcp, medication, forr, prescribed, notes, date ) {
+      document.getElementById("sub").addEventListener('click', function writeUserData( logId, pid, name, logType, pcp, medication, forr, prescribed, notes, date ) {
         pid = document.getElementById("pid").value
         name = document.getElementById("name").value
         logType = document.getElementById("logType").value 
@@ -246,7 +247,8 @@
         notes = document.getElementById("notes").value
         date = document.getElementById("date").value
 
-        set(ref(db, 'PatientLog/' + pid), {
+        set(ref(db, 'PatientLog/' + logID), {
+          logId:logId,
           pid: pid,
           name: name,
           logType: logType,
@@ -262,7 +264,7 @@
       )
       
       //Filling the data
-      function AddDataToTable(pid, name, logType, pcp, medication, forr, prescribed, notes, date){
+      function AddDataToTable(logId, pid, name, logType, pcp, medication, forr, prescribed, notes, date){
           let trow = document.createElement('tr');
           let td1 = document.createElement('td');
           let td2 = document.createElement('td');
@@ -273,16 +275,18 @@
           let td7 = document.createElement('td');
           let td8 = document.createElement('td');
           let td9 = document.createElement('td');
+          let td10 = document.createElement('td');
 
-          td1.innerHTML = pid;
-          td2.innerHTML = name;
-          td3.innerHTML = logType;
-          td4.innerHTML = pcp;
-          td5.innerHTML = medication;
-          td6.innerHTML = forr;
-          td7.innerHTML = prescribed;
-          td8.innerHTML = notes;
-          td9.innerHTML = date;
+          td1.innerHTML = logId;
+          td2.innerHTML = pid;
+          td3.innerHTML = name;
+          td4.innerHTML = logType;
+          td5.innerHTML = pcp;
+          td6.innerHTML = medication;
+          td7.innerHTML = forr;
+          td8.innerHTML = prescribed;
+          td9.innerHTML = notes;
+          td10.innerHTML = date;
 
           trow.appendChild(td1);
           trow.appendChild(td2);
@@ -293,6 +297,7 @@
           trow.appendChild(td7);
           trow.appendChild(td8);
           trow.appendChild(td9);
+          trow.appendChild(td10);
 
 
           tbody.appendChild(trow); 
@@ -303,7 +308,7 @@
           var counter = 0;
           PatientLog.forEach(element => {
               console.log('AddAllItemsToTable: ', element);
-              AddDataToTable(element.pid, element.name, element.logType, element.pcp, element.medication, element.forr, element.prescribed, element.notes, element.date);
+              AddDataToTable(element.logId, element.pid, element.name, element.logType, element.pcp, element.medication, element.forr, element.prescribed, element.notes, element.date);
               counter++;
               if (PatientLog.length === counter) {
                   addDataTable()

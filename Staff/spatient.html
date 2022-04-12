@@ -166,12 +166,34 @@
                 </tr>
             </thead>
             <tbody id="tbody1" >
-              <button>Edit</button>
             </tbody>
           </table>
         </div>  
       </div>
     </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-light border-0">
+            <h5 class="modal-title " id="exampleModalLongTitle">Edit</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body " id="exampleModalLongBody">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="sub">Save Patient</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <!--CrudFunctionStarts-->
     <script type="module">
       // Import the functions you need from the SDKs you need
@@ -230,6 +252,7 @@
           let td4 = document.createElement('td');
           let td5 = document.createElement('td');
           let td6 = document.createElement('td');
+          let td7 = document.createElement('td');
 
           td1.innerHTML = pid;
           td2.innerHTML = name;
@@ -237,6 +260,9 @@
           td4.innerHTML = address;
           td5.innerHTML = pcp;
           td6.innerHTML = nextVisit;
+          td7.innerHTML = `<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" onclick="populateEditModal('${pid}', '${name}', '${contact}', '${address}', '${pcp}', '${nextVisit}')">
+          Edit
+        </button>`;
 
           trow.appendChild(td1);
           trow.appendChild(td2);
@@ -244,10 +270,53 @@
           trow.appendChild(td4);
           trow.appendChild(td5);
           trow.appendChild(td6);
+          trow.appendChild(td7);
 
 
           tbody.appendChild(trow); 
       }
+
+      function populateEditModal(pid, name, contact, address, pcp, nextVisit) {
+      	const exampleModalLongTitle = document.getElementById('exampleModalLongTitle');
+      	const exampleModalLongBody = document.getElementById('exampleModalLongBody');
+		
+        exampleModalLongTitle.innerHTML = ``
+        exampleModalLongBody.innerHTML = ``
+
+        exampleModalLongTitle.innerHTML = `Edit <small>${pid}</small>`
+        exampleModalLongBody.innerHTML = `<form id="form_edit_record" method="post" autocomplete="off">
+            <div>
+              <input type="hidden" id="key_edit_record" name="task_key_update" class="form-control form-control-md" placeholder="KEY" value="${pid}" required="" disabled>
+              <div class="form-group">
+                <input type="text" id="name_edit_record" name="name_edit_record" class="form-control form-control-md" placeholder="Title" value="${name}" required="" >
+              </div>
+              <div class="form-group">
+                <input type="text" id="contact_edit_record" name="contact_edit_record" class="form-control form-control-md" placeholder="Title" value="${contact}" required="" >
+              </div>
+              <div class="form-group">
+                <input type="text" id="address_edit_record" name="address_edit_record" class="form-control form-control-md" placeholder="Title" value="${name}" required="" >
+              </div>
+              <div class="form-group">
+                <input type="text" id="pcp_edit_record" name="pcp_edit_record" class="form-control form-control-md" placeholder="Title" value="${pcp}" required="" >
+              </div>
+              <div class="form-group">
+                <input type="text" id="nextVisit_edit_record" name="nextVisit_edit_record" class="form-control form-control-md" placeholder="Title" value="${nextVisit}" required="" >
+              </div>
+              <div class="form-group">
+                <small class="text-success" id="success_message_update"></small>
+                <small class="text-danger" id="error_message_update"></small>
+              </div>
+              <div id="form_edit_record" align="right" class="form-group">
+                <button type="submit" class="w-25 btn btn-sm btn-success">Update</button>
+              </div>
+              
+            </div>
+          </form>`
+
+      }
+
+
+
 
       function AddAllItemsToTable(Patients){
           tbody.innerHTML='';
