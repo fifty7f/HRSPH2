@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -23,15 +22,20 @@
 	<!--Global Stylesheets Bundle(boostrap)-->
 	<link href="/dist/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
 	<link href="/dist/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+  <!-- Required vendor scripts (Do not remove) -->
+  <script type="text/javascript" src="/Staff/js/jquery.min.js"></script>
+  <script type="text/javascript" src="/Staff/js/popper.min.js"></script>
+  <script type="text/javascript" src="/Staff/js/bootstrap.js"></script>
 
-  <!--Datatables css/js-->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jqc-1.12.4/dt-1.11.5/af-2.3.7/b-2.2.2/b-html5-2.2.2/b-print-2.2.2/sb-1.3.2/sp-2.0.0/sl-1.3.4/sr-1.1.0/datatables.min.css"/>
-  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.4/dt-1.11.5/af-2.3.7/b-2.2.2/b-html5-2.2.2/b-print-2.2.2/sb-1.3.2/sp-2.0.0/sl-1.3.4/sr-1.1.0/datatables.min.js"></script>
+  <!--LogoutFunction-->
+  <script src="/Firebase/firebase.js"></script>
+  <!-- <script src="/Firebase/auth.js"></script> -->
+  <script src="/Firebase/main.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
   
 	
 </head>
-
   <body>
     <!--NavBarBegins-->
     <div class="layout layout-nav-top">
@@ -154,29 +158,58 @@
             </div>
           </div>
         </div>
-        <!--ModalEnds-->
-
-        <!-- Edit Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content shadow">
-              <div class="modal-header bg-light border-0">
-                <h5 class="modal-title " id="exampleModalLongTitle">Edit</h5>
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Patient</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  <span aria-hidden="true">&times;</span>
-                </button>
               </div>
-              <div class="modal-body " id="exampleModalLongBody">
-                
+              <!--ModalBody-->
+              <div class="modal-body">
+                <input type="hidden" id="update_doc_id">
+                <form class="row g-3">
+                  <div class="col-md-6">
+                    <label for="inputPassword4" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name2" placeholder="Awa Bah">
+                  </div>
+                  <div class="col-12">
+                    <label for="inputAddress" class="form-label">Contact</label>
+                    <input type="text" class="form-control" id="contact2" placeholder="717-344-4453">
+                  </div>
+                  <div class="col-12">
+                    <label for="inputAddress2" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address2" placeholder="123 Grey SloanDr.">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="inputCity" class="form-label">PCP</label>
+                    <select id="pcp2" class="form-select">
+                      <option selected>Dr.Webber</option>
+                      <option>Dr. Grey</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="inputState" class="form-label">Next Visit</label>
+                    <input type="text" class="form-control" id="nextVisit2" placeholder="03/25/22 @2PM">
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="gridCheck2">
+                      <label class="form-check-label" for="gridCheck">
+                        Check me once everything is correct
+                      </label>
+                    </div>
+                  </div>
+                </form>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="sub">Save Patient</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="editsub">Update Patient</button>
               </div>
             </div>
           </div>
         </div>
-
+        <!--ModalEnds-->
         <div class="divider">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
         <!--TableStarts-->
         <div class="table">
@@ -201,7 +234,7 @@
     <script type="module">
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-      import { getDatabase, ref, set, child, get, onValue } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+      import { getDatabase, ref, set,update, child, get, onValue } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
     
@@ -226,28 +259,45 @@
 
 
       //Write to RTDB
-      document.getElementById("sub").addEventListener('click', function writeUserData( pid, name, contact, address, pcp, nextVisit ) {
+      document.getElementById("sub").addEventListener('click', async function writeUserData( pid, name, contact, address, pcp, nextVisit ) {
         pid = document.getElementById("pid").value
         name = document.getElementById("name").value
         contact = document.getElementById("contact").value 
         address = document.getElementById("address").value 
         pcp = document.getElementById("pcp").value 
         nextVisit = document.getElementById("nextVisit").value 
-
-        set(ref(db, 'Patients/' + pid), {
-          pid: pid,
-          name: name,
-          contact: contact,
-          address: address,
-          pcp: pcp,
-          nextVisit: nextVisit
-      }).then({
-
-      }); }
+          await set(ref(db, 'Patients/' + pid), {
+            pid: pid,
+            name: name,
+            contact: contact,
+            address: address,
+            pcp: pcp,
+            nextVisit: nextVisit
+          });
+          location.reload() 
+        }
+      )
+      //Update
+      document.getElementById("editsub").addEventListener('click',async function writeUserData(name, contact, address, pcp, nextVisit ) {
+        name = document.getElementById("name2").value
+        contact = document.getElementById("contact2").value 
+        address = document.getElementById("address2").value 
+        pcp = document.getElementById("pcp2").value 
+        nextVisit = document.getElementById("nextVisit2").value 
+        var pid = $('#update_doc_id').val()
+          await update(ref(db, 'Patients/' + pid), {
+              name: name,
+              contact: contact,
+              address: address,
+              pcp: pcp,
+              nextVisit: nextVisit
+          })
+          location.reload() 
+        }
       )
       
       //Filling the data
-      function AddDataToTable(pid, name, contact, address, pcp, nextVisit){
+      function AddDataToTable(pid,key, name, contact, address, pcp, nextVisit){
           let trow = document.createElement('tr');
           let td1 = document.createElement('td');
           let td2 = document.createElement('td');
@@ -263,9 +313,16 @@
           td4.innerHTML = address;
           td5.innerHTML = pcp;
           td6.innerHTML = nextVisit;
-          td7.innerHTML = `<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" onclick="populateEditModal('${pid}', '${name}', '${contact}', '${address}', '${pcp}', '${nextVisit}')">
-          Edit
-        </button>`;
+          td7.innerHTML = `<button onclick="showEditModal('${key}')" class="btn btn-primary" style="padding: 8px 11px;" type="button">
+            <i class="fas fa-edit" style="padding: initial;"></i>
+            </button>
+            <input type="hidden" id="pid-${key}" value="${pid}">
+            <input type="hidden" id="n-${key}" value="${name}">
+            <input type="hidden" id="c-${key}" value="${contact}">
+            <input type="hidden" id="a-${key}" value="${address}">
+            <input type="hidden" id="p-${key}" value="${pcp}">
+            <input type="hidden" id="next-${key}" value="${nextVisit}">
+            `;
 
           trow.appendChild(td1);
           trow.appendChild(td2);
@@ -275,54 +332,16 @@
           trow.appendChild(td6);
           trow.appendChild(td7);
 
+
           tbody.appendChild(trow); 
-      }
-
-      function populateEditModal(pid, name, contact, address, pcp, nextVisit) {
-      	const exampleModalLongTitle = document.getElementById('exampleModalLongTitle');
-      	const exampleModalLongBody = document.getElementById('exampleModalLongBody');
-		
-        exampleModalLongTitle.innerHTML = ``
-        exampleModalLongBody.innerHTML = ``
-
-        exampleModalLongTitle.innerHTML = `Edit <small>${pid}</small>`
-        exampleModalLongBody.innerHTML = `<form id="form_edit_record" method="post" autocomplete="off">
-            <div>
-              <input type="hidden" id="key_edit_record" name="task_key_update" class="form-control form-control-md" placeholder="KEY" value="${pid}" required="" disabled>
-              <div class="form-group">
-                <input type="text" id="name_edit_record" name="name_edit_record" class="form-control form-control-md" placeholder="Title" value="${name}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="contact_edit_record" name="contact_edit_record" class="form-control form-control-md" placeholder="Title" value="${contact}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="address_edit_record" name="address_edit_record" class="form-control form-control-md" placeholder="Title" value="${name}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="pcp_edit_record" name="pcp_edit_record" class="form-control form-control-md" placeholder="Title" value="${pcp}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="nextVisit_edit_record" name="nextVisit_edit_record" class="form-control form-control-md" placeholder="Title" value="${nextVisit}" required="" >
-              </div>
-              <div class="form-group">
-                <small class="text-success" id="success_message_update"></small>
-                <small class="text-danger" id="error_message_update"></small>
-              </div>
-              <div id="form_edit_record" align="right" class="form-group">
-                <button type="submit" class="w-25 btn btn-sm btn-success">Update</button>
-              </div>
-              
-            </div>
-          </form>`
-
       }
 
       function AddAllItemsToTable(Patients){
           tbody.innerHTML='';
           var counter = 0;
           Patients.forEach(element => {
-              console.log('AddAllItemsToTable: ', element);
-              AddDataToTable(element.pid, element.name, element.contact, element.address, element.pcp, element.nextVisit);
+              console.log('AddAllItemsToTable: ', element.key);
+              AddDataToTable(element.pid,element.key, element.name, element.contact, element.address, element.pcp, element.nextVisit);
               counter++;
               if (Patients.length === counter) {
                   addDataTable()
@@ -338,15 +357,16 @@
 
       //Get the data from firebase
       function GetAllData(){
-          const dbRefPatients = ref(db, 'Patients/');
+          const dbRefP = ref(db, 'Patients/');
 
-          onValue(dbRefPatients, (snapshot) => {
+          onValue(dbRefP, (snapshot) => {
               var Patients = [];
               snapshot.forEach((childSnapshot) => {
                   const childKey = childSnapshot.key;
                   const childData = childSnapshot.val();
                   console.log(childData);
-                  Patients.push(childSnapshot.val())
+                  childData["key"] = childKey;
+                  Patients.push(childData)
                   // ...
               });
               AddAllItemsToTable(Patients);
@@ -357,21 +377,26 @@
 
       window.onload = GetAllData;
       
+      
     </script>
+
     <!--CrudFunctionEnds-->
-
-
-    
-    <!-- Required vendor scripts (Do not remove) -->
-    <script type="text/javascript" src="/Staff/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/Staff/js/popper.min.js"></script>
-    <script type="text/javascript" src="/Staff/js/bootstrap.js"></script>
-
-    <!--LogoutFunction-->
-    <script src="/Firebase/main.js"></script>
-
-    <script src="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"></script>
-
+    <script>
+      function showEditModal(key){
+        $('#update_doc_id').val(key)
+        var name = $(`#n-${key}`).val()
+        var contact = $(`#c-${key}`).val()
+        var address = $(`#a-${key}`).val()
+        var pcp = $(`#p-${key}`).val()
+        var nextVisit = $(`#next-${key}`).val()
+        $('#name2').val(name)
+        $('#contact2').val(contact)
+        $('#address2').val(address)
+        $('#pcp2').val(pcp)
+        $('#nextVisit2').val(nextVisit)
+        $('#editModal').modal("show")
+      }
+    </script>
     <!--end::Main-->
     <script>var hostUrl = "assets/";</script>
     <!--begin::Javascript-->
@@ -381,6 +406,7 @@
     <!--end::Global Javascript Bundle-->
     <!--begin::Page Custom Javascript(used by this page)-->
     <script src="/dist/assets/js/custom/widgets.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <!--end::Page Custom Javascript-->
     <!--end::Javascript-->
 

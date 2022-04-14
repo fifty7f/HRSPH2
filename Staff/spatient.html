@@ -133,8 +133,11 @@
                   <div class="col-md-6">
                     <label for="inputCity" class="form-label">PCP</label>
                     <select id="pcp" class="form-select">
-                      <option selected>Dr.Webber</option>
+                      <option selected>Noner</option>
                       <option>Dr. Grey</option>
+                      <option>Dr. Webber</option>
+                      <option>Dr. Stevens</option>
+                      <option>Dr. Yang</option>
                     </select>
                   </div>
                   <div class="col-md-4">
@@ -183,9 +186,12 @@
                   </div>
                   <div class="col-md-6">
                     <label for="inputCity" class="form-label">PCP</label>
-                    <select id="pcp2" class="form-select">
-                      <option selected>Dr.Webber</option>
+                    <select id="pcp" class="form-select">
+                      <option selected>Noner</option>
                       <option>Dr. Grey</option>
+                      <option>Dr. Webber</option>
+                      <option>Dr. Stevens</option>
+                      <option>Dr. Yang</option>
                     </select>
                   </div>
                   <div class="col-md-4">
@@ -314,7 +320,7 @@
           td5.innerHTML = pcp;
           td6.innerHTML = nextVisit;
           td7.innerHTML = `<button onclick="showEditModal('${key}')" class="btn btn-primary" style="padding: 8px 11px;" type="button">
-            <i class="fas fa-edit" style="padding: initial;"></i>
+            Edit
             </button>
             <input type="hidden" id="pid-${key}" value="${pid}">
             <input type="hidden" id="n-${key}" value="${name}">

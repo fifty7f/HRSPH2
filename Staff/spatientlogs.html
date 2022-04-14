@@ -1,36 +1,40 @@
 <!doctype html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Health Record System | Dashboard </title>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Record System | Dashboard </title>
 
-  <link href="/Staff/img/favicon.ico" rel="icon" type="image/x-icon">
+    <link href="/Staff/img/favicon.ico" rel="icon" type="image/x-icon">
 
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
 
-	<link href="/Staff/css/theme.css" rel="stylesheet" type="text/css" media="all" />
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    <link href="/Staff/css/theme.css" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
 
-	<!--Firebase Script(may need to move to the bottom of body, if web is slow.)-->
-  <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
+    <!--Firebase Script(may need to move to the bottom of body, if web is slow.)-->
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
 
 
-	<!--Global Stylesheets Bundle(boostrap)
-	<link href="/dist/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />-->
-	<link href="/dist/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
-
-  <!--Datatables css/js-->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jqc-1.12.4/dt-1.11.5/af-2.3.7/b-2.2.2/b-html5-2.2.2/b-print-2.2.2/sb-1.3.2/sp-2.0.0/sl-1.3.4/sr-1.1.0/datatables.min.css"/>
-  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.4/dt-1.11.5/af-2.3.7/b-2.2.2/b-html5-2.2.2/b-print-2.2.2/sb-1.3.2/sp-2.0.0/sl-1.3.4/sr-1.1.0/datatables.min.js"></script>
-  
-	
-</head>
-
+      <!--Global Stylesheets Bundle(boostrap)-->
+      <link href="/dist/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+      <link href="/dist/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+      <!-- Required vendor scripts (Do not remove) -->
+      <script type="text/javascript" src="/Staff/js/jquery.min.js"></script>
+      <script type="text/javascript" src="/Staff/js/popper.min.js"></script>
+      <script type="text/javascript" src="/Staff/js/bootstrap.js"></script>
+    
+      <!--LogoutFunction-->
+      <script src="/Firebase/firebase.js"></script>
+      <!-- <script src="/Firebase/auth.js"></script> -->
+      <script src="/Firebase/main.js"></script>
+    
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    
+  </head>
   <body>
     <!--NavBarBegins-->
     <div class="layout layout-nav-top">
@@ -130,8 +134,11 @@
                   <div class="col-md-6">
                     <label for="inputCity" class="form-label">PCP</label>
                     <select id="pcp" class="form-select">
-                      <option selected>Dr. Webber</option>
+                      <option selected>Noner</option>
                       <option>Dr. Grey</option>
+                      <option>Dr. Webber</option>
+                      <option>Dr. Stevens</option>
+                      <option>Dr. Yang</option>
                     </select>
                   </div>
                   <div class="col-md-6">
@@ -160,7 +167,7 @@
                     </div>
                     <div class="pad2"></div>
                     <div class="form-check">
-                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="prescribed" checked>
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="prescribed">
                       <label class="form-check-label" for="flexRadioDefault2"> No </label>
                     </div>
                   </div>
@@ -189,50 +196,32 @@
             </div>
           </div>
         </div>
-        <!--ModalEnds-->
-        <div class="divider">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
-        <!--TableStarts-->
-        <div class="table">
-          <table id="myTable" class="display" style="width:100%" >
-            <thead>
-                <tr>
-                  <th>Log ID</th>
-                  <th>Patient ID</th>
-                  <th>Name</th>
-                  <th>Log Type</th>
-                  <th>PCP</th>
-                  <th>Medication</th>
-                  <th>For</th>
-                  <th>Prescribed?</th>
-                  <th>Notes</th>
-                  <th>Date</th>
-                  <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tbody1" ></tbody>
-          </table>
-        </div>  
-      </div>
-    </div>
+      <!--ModalEnds-->
 
-    <!-- Edit Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content shadow">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Edit Patient info</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body " id="exampleModalLongBody">
-            
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="">Save Patient</button>
-          </div>
+        
+      <div class="divider">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div>
+      <!--TableStarts-->
+      <div class="table">
+        <table id="myTable" class="display" style="width:100%" >
+          <thead>
+              <tr>
+                <th>Log ID</th>
+                <th>Patient ID</th>
+                <th>Name</th>
+                <th>Log Type</th>
+                <th>PCP</th>
+                <th>Medication</th>
+                <th>For</th>
+                <th>Prescribed?</th>
+                <th>Notes</th>
+                <th>Date</th>
+              </tr>
+              </thead>
+              <tbody id="tbody1" ></tbody>
+            </table>
+          </div>  
         </div>
       </div>
-    </div>
 
 
     <!--CrudFunctionStarts-->
@@ -276,8 +265,9 @@
         notes = document.getElementById("notes").value
         date = document.getElementById("date").value
 
-        set(ref(db, 'PatientLog/' + logId), {
-          logId:logId,
+
+        
+        set(ref(db, 'PatientLog/' + pid), {
           pid: pid,
           name: name,
           logType: logType,
@@ -317,9 +307,6 @@
           td8.innerHTML = prescribed;
           td9.innerHTML = notes;
           td10.innerHTML = date;
-          td11.innerHTML = `<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" onclick="populateEditModal('${pid}', '${name}', '${logType}', '${pcp}', '${medication}', '${forr}' '${prescribed}', '${notes}', '${date}')">
-          Edit
-        </button>`;
 
           trow.appendChild(td1);
           trow.appendChild(td2);
@@ -331,51 +318,11 @@
           trow.appendChild(td8);
           trow.appendChild(td9);
           trow.appendChild(td10);
-          trow.appendChild(td11);
 
 
           tbody.appendChild(trow); 
       }
       
-      function populateEditModal(logId, pid, name, contact, address, pcp, nextVisit) {
-      	const exampleModalLongTitle = document.getElementById('exampleModalLongTitle');
-      	const exampleModalLongBody = document.getElementById('exampleModalLongBody');
-		
-        exampleModalLongTitle.innerHTML = ``
-        exampleModalLongBody.innerHTML = ``
-
-        exampleModalLongTitle.innerHTML = `Edit <small>${logId}</small>`
-        exampleModalLongBody.innerHTML = `<form id="form_edit_record" method="post" autocomplete="off">
-            <div>
-              <input type="hidden" id="key_edit_record" name="task_key_update" class="form-control form-control-md" placeholder="KEY" value="${pid}" required="" disabled>
-              <div class="form-group">
-                <input type="text" id="name_edit_record" name="name_edit_record" class="form-control form-control-md" placeholder="Title" value="${name}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="contact_edit_record" name="contact_edit_record" class="form-control form-control-md" placeholder="Title" value="${contact}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="address_edit_record" name="address_edit_record" class="form-control form-control-md" placeholder="Title" value="${name}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="pcp_edit_record" name="pcp_edit_record" class="form-control form-control-md" placeholder="Title" value="${pcp}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="nextVisit_edit_record" name="nextVisit_edit_record" class="form-control form-control-md" placeholder="Title" value="${nextVisit}" required="" >
-              </div>
-              <div class="form-group">
-                <small class="text-success" id="success_message_update"></small>
-                <small class="text-danger" id="error_message_update"></small>
-              </div>
-              <div id="form_edit_record" align="right" class="form-group">
-                <button type="submit" class="w-25 btn btn-sm btn-success">Update</button>
-              </div>
-              
-            </div>
-          </form>`
-
-      };
-
 
       function AddAllItemsToTable(PatientLog){
           tbody.innerHTML='';
@@ -418,20 +365,6 @@
       window.onload = GetAllData;
       
     </script>
-    <!--CrudFunctionEnds-->
-
-
-    
-    <!-- Required vendor scripts (Do not remove) -->
-    <script type="text/javascript" src="/Staff/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/Staff/js/popper.min.js"></script>
-    <script type="text/javascript" src="/Staff/js/bootstrap.js"></script>
-
-    <!--LogoutFunction-->
-    <script src="/Firebase/main.js"></script>
-
-    <script src="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"></script>
-
     <!--end::Main-->
     <script>var hostUrl = "assets/";</script>
     <!--begin::Javascript-->
@@ -441,6 +374,7 @@
     <!--end::Global Javascript Bundle-->
     <!--begin::Page Custom Javascript(used by this page)-->
     <script src="/dist/assets/js/custom/widgets.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <!--end::Page Custom Javascript-->
     <!--end::Javascript-->
 
