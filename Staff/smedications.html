@@ -22,12 +22,17 @@
 	<!--Global Stylesheets Bundle(boostrap)-->
 	<link href="/dist/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
 	<link href="/dist/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+  <!-- Required vendor scripts (Do not remove) -->
+  <script type="text/javascript" src="/Staff/js/jquery.min.js"></script>
+  <script type="text/javascript" src="/Staff/js/popper.min.js"></script>
+  <script type="text/javascript" src="/Staff/js/bootstrap.js"></script>
 
-  <!--Datatables css/js-->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jqc-1.12.4/dt-1.11.5/af-2.3.7/b-2.2.2/b-html5-2.2.2/b-print-2.2.2/sb-1.3.2/sp-2.0.0/sl-1.3.4/sr-1.1.0/datatables.min.css"/>
-  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.4/dt-1.11.5/af-2.3.7/b-2.2.2/b-html5-2.2.2/b-print-2.2.2/sb-1.3.2/sp-2.0.0/sl-1.3.4/sr-1.1.0/datatables.min.js"></script>
-  
+  <!--LogoutFunction-->
+  <script src="/Firebase/firebase.js"></script>
+  <!-- <script src="/Firebase/auth.js"></script> -->
+  <script src="/Firebase/main.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 	
 </head>
 
@@ -182,31 +187,11 @@
                   <th>Medication</th>
                   <th>For</th>
                   <th>Patient Instructions</th>
-                  <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="tbody1" ></tbody>
           </table>
         </div>  
-      </div>
-    </div>
-
-    <!-- Edit Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content shadow">
-          <div class="modal-header">
-            <h5 class="modal-title " id="exampleModalLongTitle">Edit Patient info</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body " id="exampleModalLongBody">
-            
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="">Save Patient</button>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -277,9 +262,6 @@
           let td6 = document.createElement('td');
           let td7 = document.createElement('td');
           let td8 = document.createElement('td');
-          let td9 = document.createElement('td');
-
-
 
           td1.innerHTML = medId;
           td2.innerHTML = pid;
@@ -289,10 +271,7 @@
           td6.innerHTML = medication;
           td7.innerHTML = forr;
           td8.innerHTML = notes;
-          td9.innerHTML = `<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" onclick="populateEditModal('${medId}', '${pid}', '${name}', '${pcp}', '${date}', '${medication}', '${forr}' '${notes}')">
-          Edit
-        </button>`;
-
+          
 
           trow.appendChild(td1);
           trow.appendChild(td2);
@@ -302,59 +281,9 @@
           trow.appendChild(td6);
           trow.appendChild(td7);
           trow.appendChild(td8);
-          trow.appendChild(td9);
-
-
 
           tbody.appendChild(trow); 
       }
-
-
-
-      function populateEditModal( medId, pid, name, pcp, date, medication, forr, notes) {
-      	const exampleModalLongTitle = document.getElementById('exampleModalLongTitle');
-      	const exampleModalLongBody = document.getElementById('exampleModalLongBody');
-		
-        exampleModalLongTitle.innerHTML = ``
-        exampleModalLongBody.innerHTML = ``
-
-        exampleModalLongTitle.innerHTML = `Edit <small>${medId}</small>`
-        exampleModalLongBody.innerHTML = `<form id="form_edit_record" method="post" autocomplete="off">
-            <div>
-              <input type="hidden" id="key_edit_record" name="task_key_update" class="form-control form-control-md" placeholder="KEY" value="${medId}" required="" disabled>
-              <div class="form-group">
-                <input type="text" id="name_edit_record" name="name_edit_record" class="form-control form-control-md" placeholder="Title" value="${pid}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="name_edit_record" name="name_edit_record" class="form-control form-control-md" placeholder="Title" value="${name}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="contact_edit_record" name="contact_edit_record" class="form-control form-control-md" placeholder="Title" value="${pcp}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="address_edit_record" name="address_edit_record" class="form-control form-control-md" placeholder="Title" value="${date}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="pcp_edit_record" name="pcp_edit_record" class="form-control form-control-md" placeholder="Title" value="${medication}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="nextVisit_edit_record" name="nextVisit_edit_record" class="form-control form-control-md" placeholder="Title" value="${forr}" required="" >
-              </div>
-              <div class="form-group">
-                <input type="text" id="nextVisit_edit_record" name="nextVisit_edit_record" class="form-control form-control-md" placeholder="Title" value="${notes}" required="" >
-              </div>
-              <div class="form-group">
-                <small class="text-success" id="success_message_update"></small>
-                <small class="text-danger" id="error_message_update"></small>
-              </div>
-              <div id="form_edit_record" align="right" class="form-group">
-                <button type="submit" class="w-25 btn btn-sm btn-success">Update</button>
-              </div>
-              
-            </div>
-          </form>`
-
-      };
 
       function AddAllItemsToTable(MedicationLog){
           tbody.innerHTML='';
@@ -399,18 +328,6 @@
     </script>
     <!--CrudFunctionEnds-->
 
-
-    
-    <!-- Required vendor scripts (Do not remove) -->
-    <script type="text/javascript" src="/Staff/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/Staff/js/popper.min.js"></script>
-    <script type="text/javascript" src="/Staff/js/bootstrap.js"></script>
-
-    <!--LogoutFunction-->
-    <script src="/Firebase/main.js"></script>
-
-    <script src="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"></script>
-
     <!--end::Main-->
     <script>var hostUrl = "assets/";</script>
     <!--begin::Javascript-->
@@ -420,6 +337,7 @@
     <!--end::Global Javascript Bundle-->
     <!--begin::Page Custom Javascript(used by this page)-->
     <script src="/dist/assets/js/custom/widgets.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <!--end::Page Custom Javascript-->
     <!--end::Javascript-->
 
